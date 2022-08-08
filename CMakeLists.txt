@@ -31,9 +31,15 @@ set(CMAKE_C_STANDARD 11)
 set(ADDRESS_MODEL 64)
 set(NODE_TARGET X64)
 set(PROJECT_VERSION ${COMPILE_TIME})
-FILE(GLOB SC_FILES "*.c" "*.h" )
-add_executable(${PROJECT_NAME} WIN32 ${SC_FILES})
-add_link_options(CTray PRIVATE -mwindows)
+# 添加所有源文件
+# FILE(GLOB SC_FILES "*.c" "*.h" )
+# add_executable(${PROJECT_NAME} WIN32 ${SC_FILES})
+# 去除控制台
+# add_executable(${PROJECT_NAME} WIN32 test.c)
+
+# add_link_options(CTray PRIVATE -mwindows)
+
+add_executable(${PROJECT_NAME}  test.c)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 # set(PROJECT_NAME 1)
@@ -48,13 +54,22 @@ find_package(PkgConfig REQUIRED)
 # # 在target_link_libraries加入${Glib_LIBRARY}
 # target_link_libraries(${PROJECT_NAME} ${Glib_LIBRARY})
 # pkg_check_modules(GTK REQUIRED gtk+-3.0)
+# gtk3.0
+# include_directories (${GTK_INCLUDE_DIRS})
+# link_directories (${GTK_LIBRARY_DIRS})
 
-include_directories (${GTK_INCLUDE_DIRS})
-link_directories (${GTK_LIBRARY_DIRS})
+# # link_directories(D:\\msys64\\mingw64\\lib)
+# add_definitions (${GTK_CFLAGS_OTHER})
+# target_link_libraries (${PROJECT_NAME} ${GTK_LIBRARIES})
 
-# link_directories(D:\\msys64\\mingw64\\lib)
-add_definitions (${GTK_CFLAGS_OTHER})
-target_link_libraries (${PROJECT_NAME} ${GTK_LIBRARIES})
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK4 REQUIRED gtk4)
+
+include_directories(${GTK4_INCLUDE_DIRS})
+link_directories(${GTK4_LIBRARY_DIRS})
+target_link_libraries(${PROJECT_NAME} 
+        ${GTK4_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${GSL_LIBRARIES})
 
 target_link_libraries(${PROJECT_NAME} libevent_core.lib)
