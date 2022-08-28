@@ -362,46 +362,147 @@
 // 	 gtk_widget_show (window);
 // }
 #include <gtk/gtk.h>
+#include "mylog.h"
+#include "mcheck.h"
 gboolean fun(gpointer d)
 {
+	
+	GIOChannel* stream=(GIOChannel*)d;
 	while (/* condition */1)
 	{
-char* t= g_malloc0(100);
+		
+	// g_print("close_app");
+	my_log_write(stream,STD_FILE,"线程1printhello");
+// char* t= g_malloc0(100);
 	g_print("hello\n");
-	g_free(t);
-	t=NULL;
-	_sleep(100);
+	// g_free(t);
+	// t=NULL;
+	// _sleep(100);
 		/* code */
 	}
 	
 	
 }
+gboolean fun1(gpointer d)
+{
+	int  nub=0;
+	while (/* condition */1)
+	{
+		
+GIOChannel* stream=(GIOChannel*)d;
+	while (/* condition */1)
+	{
+		
+	// g_print("close_app");
+	my_log_write(stream,STD_FILE,"线程2printehello");
+// char* t= g_malloc0(100);
+	g_print("hello\n");
+	// g_free(t);
+	// t=NULL;
+	// _sleep(100);
+		/* code */
+	}
+	
+		/* code */
+	}
+	
+	
+}
+gboolean fun2(gpointer d)
+{
+	int  nub=0;
+	while (/* condition */1)
+	{
+		
+GIOChannel* stream=(GIOChannel*)d;
+	while (/* condition */1)
+	{
+		
+	// g_print("close_app");
+		my_log_write(stream,STD_FILE,"线程3printhello");
+// char* t= g_malloc0(100);
+	g_print("hello\n");
+	// g_free(t);
+	// t=NULL;
+	// _sleep(100);
+		/* code */
+	}
+	
+		/* code */
+	}
+	
+	
+}
+#include<error.h>
+
+static gboolean gunc_close(GtkWidget* w,gpointer d)
+{
+	g_print("hello\n");
+
+	return true;
+}
 static void
 activate (GtkApplication* app,
           gpointer        user_data)
 {
+	// GtkBuilder* builder;
+	// builder=	gtk_builder_new();
+	GError* err=NULL;
+	//  gtk_builder_add_from_file(builder,"window",&err);
+	// g_strerror()
 	GtkWidget *window;
 	
 	 window = gtk_application_window_new (app);
 	 gtk_window_set_title (GTK_WINDOW (window), "Window");
 	 gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
-	 g_thread_new("t",fun,NULL);
+	 GIOChannel* stream=	my_log_creat("hello.txt",STD_FILE);
+	my_log_write(stream,STD_FILE,"hello");
+
+	 g_signal_connect(window,"destroy",gunc_close,NULL);
+	 g_thread_new("t",fun,stream);
+	 
 	 gtk_widget_show (window);
 }
+#include<glib/gstdio.h>
+#include <stdlib.h>
+//通过这个地方打印异常信息
+void exit_func(int a)
+{
 
+	//   G_DEBUG_HERE();
+g_return_if_fail(a==0);
+GString* a1=g_string_new("hello wrod");
+	//a1->str[6]=0;
+// g_string_replace(a1,"o","ret",1);	
+
+	
+	g_printf("%s,%s,%s,%s\n",g_strerror(a),__FILE__,__func__,a1->str);
+}
 int
 main (int    argc,
 	  char **argv)
 {
+
+// argc=NULL;
+// my_log_head my_lo=(my_log_head)argc;
+// if(my_lo->flag==2)
+// {
+// 	;
+// }
+	signal(SIGABRT,exit_func);
+
+	// g_abort();
 	 GtkApplication *app;
 	 int status;
-	
+//  g_abort();
+//  g_atexit();
 
 	
-	 app = gtk_application_new ("og.gtk.example", G_APPLICATION_FLAGS_NONE);
-	 g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	 app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
 	 status = g_application_run (G_APPLICATION (app), argc, argv);
 	 g_object_unref (app);
-	
+
+
 	 return status;
 }

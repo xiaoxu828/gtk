@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gstdio.h": "c",
+        "gsocketlistener.h": "c"
+    }
+}

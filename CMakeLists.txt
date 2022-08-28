@@ -39,7 +39,7 @@ set(PROJECT_VERSION ${COMPILE_TIME})
 
 # add_link_options(CTray PRIVATE -mwindows)
 
-add_executable(${PROJECT_NAME}  test.c)
+add_executable(${PROJECT_NAME}  test.c mylog.c mylog.h)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 # set(PROJECT_NAME 1)
