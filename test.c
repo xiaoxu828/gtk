@@ -363,7 +363,8 @@
 // }
 #include <gtk/gtk.h>
 #include "mylog.h"
-#include "mcheck.h"
+
+
 gboolean fun(gpointer d)
 {
 	
@@ -434,7 +435,7 @@ GIOChannel* stream=(GIOChannel*)d;
 	
 }
 #include<error.h>
-
+#include"mymalloc/mymalloc.h"
 static gboolean gunc_close(GtkWidget* w,gpointer d)
 {
 	g_print("hello\n");
@@ -458,6 +459,11 @@ activate (GtkApplication* app,
 	 GIOChannel* stream=	my_log_creat("hello.txt",STD_FILE);
 	my_log_write(stream,STD_FILE,"hello");
 
+
+	///测试用于内存泄漏调试函数的功能；
+	char* test= MY_malloc(__FILE__,__FUNCTION__,"hello",__LINE__,10);
+	char* test1= MY_malloc(__FILE__,__FUNCTION__,"hello",__LINE__,10);
+	MY_free(test1);
 	 g_signal_connect(window,"destroy",gunc_close,NULL);
 	 g_thread_new("t",fun,stream);
 	 

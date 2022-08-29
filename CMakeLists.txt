@@ -31,6 +31,8 @@ set(CMAKE_C_STANDARD 11)
 set(ADDRESS_MODEL 64)
 set(NODE_TARGET X64)
 set(PROJECT_VERSION ${COMPILE_TIME})
+# set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}  -fno-omit-frame-pointer -fsanitize=address")
+# set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 # 添加所有源文件
 # FILE(GLOB SC_FILES "*.c" "*.h" )
 # add_executable(${PROJECT_NAME} WIN32 ${SC_FILES})
@@ -39,9 +41,10 @@ set(PROJECT_VERSION ${COMPILE_TIME})
 
 # add_link_options(CTray PRIVATE -mwindows)
 
-add_executable(${PROJECT_NAME}  test.c mylog.c mylog.h)
+add_executable(${PROJECT_NAME}  test.c mylog.c mylog.h mymalloc/mymalloc.c mymalloc/mymalloc.h)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+
 # set(PROJECT_NAME 1)
 configure_file(config.h.in config.h)
 include_directories(D:\\msys64\\mingw64\\include\\modbus)
@@ -91,3 +94,4 @@ target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
 
 INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR})
 include(CPack)
+# install(TARGETS patch DESTINATION git)
