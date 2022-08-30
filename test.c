@@ -363,24 +363,37 @@
 // }
 #include <gtk/gtk.h>
 #include "mylog.h"
+#include<error.h>
+#include"mymalloc/mymalloc.h"
+// #include<glib/gstdio.h>
+#include <stdlib.h>
+#define malloc(siz) MY_malloc(__FILE__,__FUNCTION__,"teset",__LINE__ , siz)
+#define free(d) MY_free( d)
 
-
-gboolean fun(gpointer d)
+gpointer fun(gpointer d)
 {
-	
-	GIOChannel* stream=(GIOChannel*)d;
-	while (/* condition */1)
+		int a=10;
+	while (/* condition */ a!=0)
 	{
-		
-	// g_print("close_app");
-	my_log_write(stream,STD_FILE,"线程1printhello");
-// char* t= g_malloc0(100);
-	g_print("hello\n");
-	// g_free(t);
-	// t=NULL;
-	// _sleep(100);
+		char* temp= malloc(100);
+		_sleep(100);
+	//	g_print("1");
 		/* code */
 	}
+	//下面用于线程打印log测试
+// 	GIOChannel* stream=(GIOChannel*)d;
+// 	while (/* condition */1)
+// 	{
+		
+// 	// g_print("close_app");
+// 	my_log_write(stream,STD_FILE,"线程1printhello");
+// // char* t= g_malloc0(100);
+// 	g_print("hello\n");
+// 	// g_free(t);
+// 	// t=NULL;
+// 	// _sleep(100);
+// 		/* code */
+// 	}
 	
 	
 }
@@ -389,7 +402,7 @@ gboolean fun1(gpointer d)
 	int  nub=0;
 	while (/* condition */1)
 	{
-		
+		//malloc()
 GIOChannel* stream=(GIOChannel*)d;
 	while (/* condition */1)
 	{
@@ -434,18 +447,49 @@ GIOChannel* stream=(GIOChannel*)d;
 	
 	
 }
-#include<error.h>
-#include"mymalloc/mymalloc.h"
+
+ GIOChannel* stream1;
+gboolean prin(char* string)
+{
+	
+	my_log_write(stream1,STD_FILE,string);
+
+//	g_print("%s",string);
+}
+
 static gboolean gunc_close(GtkWidget* w,gpointer d)
 {
-	g_print("hello\n");
-
+	
+	//g_print("hello\n");
+	free_print(prin);
+	
+	MY_malloc_close();
+		my_log_close(&stream1);
 	return true;
+}
+
+gboolean func_malloc(gpointer d)
+{
+	int a=10;
+	while (/* condition */ a!=0)
+	{
+		char* temp= malloc(100);
+		_sleep(100);
+		g_print("1");
+		/* code */
+	}
+	
+  
+}
+void func_pool (gpointer data,  gpointer user_data)
+{
+
 }
 static void
 activate (GtkApplication* app,
           gpointer        user_data)
 {
+	stream1=my_log_creat("hello.txt",STD_FILE);
 	// GtkBuilder* builder;
 	// builder=	gtk_builder_new();
 	GError* err=NULL;
@@ -458,19 +502,33 @@ activate (GtkApplication* app,
 	 gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
 	 GIOChannel* stream=	my_log_creat("hello.txt",STD_FILE);
 	my_log_write(stream,STD_FILE,"hello");
-
-
+	  g_thread_init(NULL);
+GThreadPool* pool=g_thread_pool_new(func_pool,NULL,10,TRUE,&err);
+if(err) 
+{
+	g_print("%s",err->message);
+}
+g_thread_pool_push(pool,NULL,NULL);
 	///测试用于内存泄漏调试函数的功能；
-	char* test= MY_malloc(__FILE__,__FUNCTION__,"hello",__LINE__,10);
-	char* test1= MY_malloc(__FILE__,__FUNCTION__,"hello",__LINE__,10);
-	MY_free(test1);
+	char* test= malloc(10);
+	char* test1= malloc(10);
+	
+	free(test1);
+
 	 g_signal_connect(window,"destroy",gunc_close,NULL);
 	 g_thread_new("t",fun,stream);
-	 
+	  g_thread_new("t",fun,stream);
+	   g_thread_new("t",fun,stream);
+	    g_thread_new("t",fun,stream);
+		 g_thread_new("t",fun,stream);
+		  g_thread_new("t",fun,stream);
+		   g_thread_new("t",fun,stream);
+		    g_thread_new("t",fun,stream);
+			 g_thread_new("t",fun,stream);
+			  g_thread_new("t",fun,stream);
 	 gtk_widget_show (window);
 }
-#include<glib/gstdio.h>
-#include <stdlib.h>
+
 //通过这个地方打印异常信息
 void exit_func(int a)
 {
@@ -481,8 +539,8 @@ GString* a1=g_string_new("hello wrod");
 	//a1->str[6]=0;
 // g_string_replace(a1,"o","ret",1);	
 
-	
-	g_printf("%s,%s,%s,%s\n",g_strerror(a),__FILE__,__func__,a1->str);
+
+	g_print("%s,%s,%s,%s\n",g_strerror(a),__FILE__,__func__,a1->str);
 }
 int
 main (int    argc,

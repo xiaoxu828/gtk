@@ -36,14 +36,5 @@ typedef struct Plc_Adder{
 	gboolean sp2_flag;
 	gboolean sp3_flag;
 	gboolean sp4_flag;
-
-
-
-
-
-
-
-
-
 }Plc_adder,*plc_adder;
 #endif

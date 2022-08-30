@@ -1,4 +1,7 @@
 #include"mymalloc.h"
+//锁保证在多线程的情况下不会出现错误；
+GMutex* mutex;
+//链表保存申请内存的所有数据
 static GList* malloc_list;
 /**
  * @brief 添加节点的所有信息
@@ -87,6 +90,16 @@ return ret;
  * @copyright Copyright (c) 2022
  */
 gpointer MY_malloc(char* file_name,char* func_name,char* name,int line ,size_t siz){  
+    if(mutex==NULL)
+    {
+        mutex=g_mutex_new();
+        if(mutex==NULL)
+        {
+            g_print("malloc:加锁失败，程序退出");
+            exit(-1);
+        }
+        g_mutex_init(mutex);
+    }
         g_assert(file_name!=NULL);
     g_assert(func_name!=NULL);
     g_assert(name!=NULL);
@@ -95,7 +108,9 @@ Malloc_Date* pnode=my_malloc_add(file_name,func_name,name,line,siz);
 
 gpointer ret=g_malloc(siz);
 pnode->adder=ret;
+g_mutex_lock(mutex);
 malloc_list= g_list_append(malloc_list,pnode);
+g_mutex_unlock(mutex);
 // g_free(pnode);
 return ret;
 }
@@ -139,13 +154,54 @@ return 1;
  * @copyright Copyright (c) 2022
  */
 MY_free(gpointer d){
+    g_mutex_lock(mutex);
   GList* lst=  g_list_find_custom(malloc_list,d,find_p);
+  g_mutex_unlock(mutex);
     Malloc_Date* temp=lst->data;
     g_free(temp->file_name);
     g_free(temp->func_name);
     g_free(temp->name);
+    g_mutex_lock(mutex);
     malloc_list= g_list_delete_link(malloc_list,lst);
+    g_mutex_unlock(mutex);
+
+}
+ void(*func_temp)(char* string);
+gboolean print_func(gpointer data,gpointer usr_data)
+{
+    Malloc_Date*temp=data;
+
+    gchar* str_temp= g_strdup_printf("文件名:%s,函数名:%s,所在行:%d,大小:%d,地址:%p",
+     temp->file_name,\
+     temp->func_name,\
+     temp->line,\
+     temp->sze,\
+     temp->adder);
+     func_temp(str_temp);
+     g_free(str_temp);
+   
+ //  func_temp(str_temp);
+
+
 
 
 }
+MY_malloc_close(void){
+    g_list_free(malloc_list);
+}
+void free_print(void*(func)(char* string))
+{
+    g_assert(func!=NULL);
+    if(malloc_list)
+    {
+         
+          func_temp=func;
+        g_list_foreach(malloc_list,print_func,func);
+      //  g_strdup_printf("文件名:%s,函数名:%s,所在行:%d,大小:%d",)
 
+
+    }
+
+
+
+}

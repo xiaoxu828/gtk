@@ -1,6 +1,12 @@
-
+//TODO 
 /**
  * @brief 用于调试内存泄漏的文件
+ * 包括的功能，申请内存，释放内存，打印没有被释放的函数；
+ * 使用示例
+ * 1.重定义malloc，free 函数；
+ * 2.申请内存
+ * 3.释放内存
+ * 4.在程序末尾使用free_print打印所有没有被释放的内存；
  * 分配的内存数据都存放到链表，包括在哪个文件，哪个函数分配的第几行，变量名字；
  * @version  1.0
  * @author xuzhang (you@domain.com)
@@ -45,6 +51,10 @@ typedef struct  MALLOC_DATE{
  */
 gpointer MY_malloc(char* file_name,char* func_name,char* name,int line ,size_t siz);
 MY_free(gpointer d);
+MY_malloc_close(void);
+
+void free_print(void*(func)(char* string));
+
  #define my_malloc MY_malloc
  #define my_free MY_free
 // void my_malloc_ini();

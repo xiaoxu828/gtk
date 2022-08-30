@@ -91,7 +91,7 @@ message(STATUS "MODBUS_LIBRARY: ${MODBUS_LIBRARY}")
 target_link_libraries(${PROJECT_NAME} modbus.a)
 # target_link_libraries(${PROJECT_NAME} gthread-2.0.a  intl.a iconv.a )
 target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
-
+target_link_libraries(${PROJECT_NAME} gthread-2.0)
 INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR})
 include(CPack)
 # install(TARGETS patch DESTINATION git)
