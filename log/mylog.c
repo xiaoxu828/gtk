@@ -111,6 +111,7 @@ if(err)
     buf=NULL;
     return  false;
 }
+g_io_channel_flush(stream,NULL);
 // g_io_channel_write_chars(stream,data,-1,&siz,&err);
 // if(err)
 // {
@@ -194,7 +195,7 @@ static void func_set(my_log_head log_class,enum  LOG_FLAG flag)
     log_class->flag=flag;
     log_class->list=NULL;
     log_class->my_log_creat=my_log_creat;
-    log_class->my_log_write=my_log_close;
+    log_class->my_log_write=my_log_write;
 return true;
 }
 /**
@@ -245,7 +246,7 @@ gboolean my_log_class_close(my_log_head* class_log)
     }
     my_log_head temp=*class_log;
     //集成链表以后需要将链表的数据全部写入日志，释放链表才能进行下一步；
-    g_io_channel_close(temp->stream);
+    g_io_channel_close(&temp->stream);
     temp->stream=NULL;
     if(temp)
     {

@@ -21,7 +21,7 @@ Malloc_Date* my_malloc_add(char* file_name,char* func_name,char* name,int line ,
 {
     g_assert(file_name!=NULL);
     g_assert(func_name!=NULL);
-    g_assert(name!=NULL);
+     g_assert(name!=NULL);
     g_assert(siz>0);
     Malloc_Date* ret=g_malloc(sizeof(Malloc_Date));
     if(ret==NULL)
@@ -37,7 +37,7 @@ Malloc_Date* my_malloc_add(char* file_name,char* func_name,char* name,int line ,
     ret->file_name=g_malloc(strnlen_s(file_name,1023)+1);
     if(ret->file_name==NULL)
     {
-        g_print("err:file_name:%s,func_name:%s,func_name:%s,line:%d,size_t=%d",file_name,func_name,name,line,siz);
+        g_print("err:file_name:%s,func_name:%s,func_name:%s,line:%d,size_t=%d",file_name,func_name,name,line,(int)siz);
     g_free(ret);
         exit(-1);
     }
@@ -54,7 +54,7 @@ Malloc_Date* my_malloc_add(char* file_name,char* func_name,char* name,int line ,
         {
             g_list_free(malloc_list);
         }
-             g_print("err:file_name:%s,func_name:%s,func_name:%s,line:%d,size_t=%d",file_name,func_name,name,line,siz);
+             g_print("err:file_name:%s,func_name:%s,func_name:%s,line:%d,size_t=%d",file_name,func_name,name,line,(int)siz);
             exit(-1);
         }
         g_strlcpy(ret->func_name,func_name,1024);
@@ -66,7 +66,7 @@ if(ret->name==NULL)
     g_free(ret);
     if(malloc_list)
     g_list_free(malloc_list);
- g_print("err:file_name:%s,func_name:%s,func_name:%s,line:%d,size_t=%d",file_name,func_name,name,line,siz);
+ g_print("err:file_name:%s,func_name:%s,func_name:%s,line:%d,size_t=%d",file_name,func_name,name,line,(int)siz);
     
     
     exit(-1);
@@ -102,7 +102,7 @@ gpointer MY_malloc(char* file_name,char* func_name,char* name,int line ,size_t s
     }
         g_assert(file_name!=NULL);
     g_assert(func_name!=NULL);
-    g_assert(name!=NULL);
+     g_assert(name!=NULL);
     g_assert(siz>0);
 Malloc_Date* pnode=my_malloc_add(file_name,func_name,name,line,siz);
 
@@ -127,7 +127,7 @@ return ret;
  */
 gint find_p(gconstpointer a,gconstpointer b)
 {
-  Malloc_Date* temp=a;
+  Malloc_Date* temp=(Malloc_Date*)a;
   
 if( temp->adder <b)
 {
@@ -153,7 +153,7 @@ return 1;
  * @date 2022-08-29
  * @copyright Copyright (c) 2022
  */
-MY_free(gpointer d){
+void MY_free(gpointer d){
     g_mutex_lock(mutex);
   GList* lst=  g_list_find_custom(malloc_list,d,find_p);
   g_mutex_unlock(mutex);
@@ -178,15 +178,10 @@ gboolean print_func(gpointer data,gpointer usr_data)
      temp->sze,\
      temp->adder);
      func_temp(str_temp);
-     g_free(str_temp);
-   
+     g_free(str_temp); 
  //  func_temp(str_temp);
-
-
-
-
 }
-MY_malloc_close(void){
+void MY_malloc_close(void){
     g_list_free(malloc_list);
 }
 void free_print(void*(func)(char* string))

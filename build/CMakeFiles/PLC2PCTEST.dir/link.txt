@@ -1,0 +1,3 @@
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E rm -f CMakeFiles\PLC2PCTEST.dir/objects.a
+D:\msys64\mingw64\bin\ar.exe cr CMakeFiles\PLC2PCTEST.dir/objects.a @CMakeFiles\PLC2PCTEST.dir\objects1.rsp
+D:\msys64\mingw64\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\PLC2PCTEST.dir/objects.a -Wl,--no-whole-archive -o PLC2PCTEST.exe -Wl,--out-implib,libPLC2PCTEST.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\PLC2PCTEST.dir\linklibs.rsp

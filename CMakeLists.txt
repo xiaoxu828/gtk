@@ -41,7 +41,7 @@ set(PROJECT_VERSION ${COMPILE_TIME})
 
 # add_link_options(CTray PRIVATE -mwindows)
 
-add_executable(${PROJECT_NAME}  test.c mylog.c mylog.h mymalloc/mymalloc.c mymalloc/mymalloc.h)
+add_executable(${PROJECT_NAME}  test.c log/mylog.c log/mylog.h mymalloc/mymalloc.c mymalloc/mymalloc.h myobject/myobject.c myobject/myobject.h)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 

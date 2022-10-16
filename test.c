@@ -3,6 +3,9 @@
 // TODO 	添加注释；
 // TODO	导出sdk手册；
 // TODO  完善cmake语法；
+//TODO	添加了text_view控件用于文本编辑 2022/10/09
+//TODO 添加菜单栏
+//
 //编译libevent静态库；20220730
 // CJSON库
 //二维码生成库
@@ -362,40 +365,19 @@
 // 	 gtk_widget_show (window);
 // }
 #include <gtk/gtk.h>
-#include "mylog.h"
+#include "log/mylog.h"
 #include<error.h>
 #include"mymalloc/mymalloc.h"
+#include"GL/gl.h"
 // #include<glib/gstdio.h>
 #include <stdlib.h>
-#define malloc(siz) MY_malloc(__FILE__,__FUNCTION__,"teset",__LINE__ , siz)
+#define malloc(siz) MY_malloc(__FILE__,__FUNCTION__,"hello",__LINE__ , siz)
 #define free(d) MY_free( d)
 
 gpointer fun(gpointer d)
 {
 		int a=10;
-	while (/* condition */ a!=0)
-	{
-		char* temp= malloc(100);
-		_sleep(100);
-	//	g_print("1");
-		/* code */
-	}
-	//下面用于线程打印log测试
-// 	GIOChannel* stream=(GIOChannel*)d;
-// 	while (/* condition */1)
-// 	{
 		
-// 	// g_print("close_app");
-// 	my_log_write(stream,STD_FILE,"线程1printhello");
-// // char* t= g_malloc0(100);
-// 	g_print("hello\n");
-// 	// g_free(t);
-// 	// t=NULL;
-// 	// _sleep(100);
-// 		/* code */
-// 	}
-	
-	
 }
 gboolean fun1(gpointer d)
 {
@@ -427,7 +409,7 @@ gboolean fun2(gpointer d)
 	int  nub=0;
 	while (/* condition */1)
 	{
-		
+	
 GIOChannel* stream=(GIOChannel*)d;
 	while (/* condition */1)
 	{
@@ -453,7 +435,7 @@ gboolean prin(char* string)
 {
 	
 	my_log_write(stream1,STD_FILE,string);
-
+	return true;
 //	g_print("%s",string);
 }
 
@@ -465,6 +447,12 @@ static gboolean gunc_close(GtkWidget* w,gpointer d)
 	
 	MY_malloc_close();
 		my_log_close(&stream1);
+		// g_application_release()
+		//
+	GApplication* app= g_application_get_default();
+	// g_application_hold(app);
+//   g_application_release (app);
+g_application_quit(app);
 	return true;
 }
 
@@ -479,65 +467,92 @@ gboolean func_malloc(gpointer d)
 		/* code */
 	}
 	
-  
+  return true;
 }
 void func_pool (gpointer data,  gpointer user_data)
 {
 
 }
+
+typedef struct{
+GtkWidget* window;
+GtkWidget* view;
+GtkWidget* scrolltext;
+GtkWidget* menu;
+GtkWidget* scroll;
+
+
+
+}PRO_W,*Pro_W;
+Pro_W pro_windows;
+
 static void
 activate (GtkApplication* app,
           gpointer        user_data)
 {
+	pro_windows=malloc(sizeof(PRO_W));
+
+
 	stream1=my_log_creat("hello.txt",STD_FILE);
 	// GtkBuilder* builder;
 	// builder=	gtk_builder_new();
 	GError* err=NULL;
 	//  gtk_builder_add_from_file(builder,"window",&err);
 	// g_strerror()
-	GtkWidget *window;
+
 	
-	 window = gtk_application_window_new (app);
-	 gtk_window_set_title (GTK_WINDOW (window), "Window");
-	 gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
-	 GIOChannel* stream=	my_log_creat("hello.txt",STD_FILE);
-	my_log_write(stream,STD_FILE,"hello");
+	 pro_windows->window = gtk_application_window_new (app);
+	 gtk_window_set_title (GTK_WINDOW ( pro_windows->window), "Window");
+	 gtk_window_set_default_size (GTK_WINDOW ( pro_windows->window), 200, 200);
+
+	 pro_windows->view = gtk_grid_new();
+
+	//开始设置grid的行跟列；
+	
+	pro_windows->scrolltext=gtk_text_view_new();
+
+
+
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (pro_windows->scrolltext), GTK_WRAP_WORD);
+      gtk_text_view_set_top_margin (GTK_TEXT_VIEW (pro_windows->scrolltext), 20);
+      gtk_text_view_set_bottom_margin (GTK_TEXT_VIEW (pro_windows->scrolltext), 20);
+      gtk_text_view_set_left_margin (GTK_TEXT_VIEW (pro_windows->scrolltext), 20);
+      gtk_text_view_set_right_margin (GTK_TEXT_VIEW (pro_windows->scrolltext), 20);
+      gtk_text_view_set_pixels_below_lines (GTK_TEXT_VIEW (pro_windows->scrolltext), 10);
+	         
+		 //   gtk_widget_add_controller (view, controller);
+	 //GIOChannel* stream=	my_log_creat("hello.txt",STD_FILE);
+		My_log_head* logs=my_log_class_creat("hello1.txt",STD_FILE);
+	//	logs->my_log_write(logs->stream,STD_FILE,"hello");
+	//my_log_write(stream,STD_FILE,"hello");
 	  g_thread_init(NULL);
-GThreadPool* pool=g_thread_pool_new(func_pool,NULL,10,TRUE,&err);
-if(err) 
-{
-	g_print("%s",err->message);
-}
-g_thread_pool_push(pool,NULL,NULL);
-	///测试用于内存泄漏调试函数的功能；
+ // gtk_window_set_child (GTK_WINDOW (pro_windows->window),pro_windows->scroll );
+	pro_windows->scroll= gtk_scrolled_window_new();
+	      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(pro_windows->scroll),
+                                      GTK_POLICY_AUTOMATIC,
+                                      GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_child(pro_windows->scroll,pro_windows->scrolltext);
+	//gtk_grid_attach(pro_windows->view,pro_windows->scroll,0,0,500,500);
+	//    gtk_scrolled_window_set_child (pro_windows->scroll, pro_windows->scrolltext);
+	// /测试用于内存泄漏调试函数的功能；
+	gtk_grid_attach(pro_windows->view,pro_windows->scroll,1,1,200,200);
+	gtk_window_set_child(pro_windows->window,pro_windows->view );
+
 	char* test= malloc(10);
 	char* test1= malloc(10);
-	
 	free(test1);
+	 g_signal_connect( pro_windows->window,"destroy",gunc_close,NULL);
 
-	 g_signal_connect(window,"destroy",gunc_close,NULL);
-	 g_thread_new("t",fun,stream);
-	  g_thread_new("t",fun,stream);
-	   g_thread_new("t",fun,stream);
-	    g_thread_new("t",fun,stream);
-		 g_thread_new("t",fun,stream);
-		  g_thread_new("t",fun,stream);
-		   g_thread_new("t",fun,stream);
-		    g_thread_new("t",fun,stream);
-			 g_thread_new("t",fun,stream);
-			  g_thread_new("t",fun,stream);
-	 gtk_widget_show (window);
+	 gtk_widget_show ( pro_windows->window);
 }
-
 //通过这个地方打印异常信息
 void exit_func(int a)
 {
 
-	//   G_DEBUG_HERE();
+
 g_return_if_fail(a==0);
 GString* a1=g_string_new("hello wrod");
-	//a1->str[6]=0;
-// g_string_replace(a1,"o","ret",1);	
+
 
 
 	g_print("%s,%s,%s,%s\n",g_strerror(a),__FILE__,__func__,a1->str);
@@ -547,12 +562,7 @@ main (int    argc,
 	  char **argv)
 {
 
-// argc=NULL;
-// my_log_head my_lo=(my_log_head)argc;
-// if(my_lo->flag==2)
-// {
-// 	;
-// }
+
 	signal(SIGABRT,exit_func);
 
 	// g_abort();
@@ -564,7 +574,11 @@ main (int    argc,
 	
 	 app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
 	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	//	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+		//g_signal_connect (app, "shutdown", G_CALLBACK ( ), NULL);
+
 	 status = g_application_run (G_APPLICATION (app), argc, argv);
+	
 	 g_object_unref (app);
 
 

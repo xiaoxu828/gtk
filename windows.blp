@@ -1,0 +1,39 @@
+template ShumateDemoWindow : Gtk.ApplicationWindow {
+  can-focus: yes;
+  title: _("Shumate Demo");
+  default-width: 800;
+  default-height: 600;
+
+  [titlebar]
+  Gtk.HeaderBar {
+    Gtk.DropDown layers_dropdown {
+      notify::selected => on_layers_dropdown_notify_selected() swapped;
+    }
+  }
+
+  Gtk.Overlay overlay {
+    vexpand: true;
+    Shumate.Map map {}
+
+    [overlay]
+    Shumate.Scale scale {
+      halign: start;
+      valign: end;
+    }
+
+    [overlay]
+    Gtk.Box {
+      orientation: vertical;
+      halign: end;
+      valign: end;
+
+      Shumate.Compass compass {
+        halign: end;
+        map: map;
+      }
+      Shumate.License license {
+        halign: end;
+      }
+    }
+  }
+}

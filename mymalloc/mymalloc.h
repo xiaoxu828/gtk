@@ -50,8 +50,8 @@ typedef struct  MALLOC_DATE{
  * @copyright Copyright (c) 2022
  */
 gpointer MY_malloc(char* file_name,char* func_name,char* name,int line ,size_t siz);
-MY_free(gpointer d);
-MY_malloc_close(void);
+void MY_free(gpointer d);
+void MY_malloc_close(void);
 
 void free_print(void*(func)(char* string));
 

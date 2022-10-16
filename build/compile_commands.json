@@ -1,0 +1,22 @@
+[
+{
+  "directory": "D:/github/gtk3.0/gtk/build",
+  "command": "D:\\msys64\\mingw64\\bin\\gcc.exe  @CMakeFiles/PLC2PCTEST.dir/includes_C.rsp -g -Wall -std=gnu11 -o CMakeFiles\\PLC2PCTEST.dir\\test.c.obj -c D:\\github\\gtk3.0\\gtk\\test.c",
+  "file": "D:/github/gtk3.0/gtk/test.c"
+},
+{
+  "directory": "D:/github/gtk3.0/gtk/build",
+  "command": "D:\\msys64\\mingw64\\bin\\gcc.exe  @CMakeFiles/PLC2PCTEST.dir/includes_C.rsp -g -Wall -std=gnu11 -o CMakeFiles\\PLC2PCTEST.dir\\mylog.c.obj -c D:\\github\\gtk3.0\\gtk\\mylog.c",
+  "file": "D:/github/gtk3.0/gtk/mylog.c"
+},
+{
+  "directory": "D:/github/gtk3.0/gtk/build",
+  "command": "D:\\msys64\\mingw64\\bin\\gcc.exe  @CMakeFiles/PLC2PCTEST.dir/includes_C.rsp -g -Wall -std=gnu11 -o CMakeFiles\\PLC2PCTEST.dir\\mymalloc\\mymalloc.c.obj -c D:\\github\\gtk3.0\\gtk\\mymalloc\\mymalloc.c",
+  "file": "D:/github/gtk3.0/gtk/mymalloc/mymalloc.c"
+},
+{
+  "directory": "D:/github/gtk3.0/gtk/build",
+  "command": "D:\\msys64\\mingw64\\bin\\gcc.exe  @CMakeFiles/PLC2PCTEST.dir/includes_C.rsp -g -Wall -std=gnu11 -o CMakeFiles\\PLC2PCTEST.dir\\myobject\\myobject.c.obj -c D:\\github\\gtk3.0\\gtk\\myobject\\myobject.c",
+  "file": "D:/github/gtk3.0/gtk/myobject/myobject.c"
+}
+]
